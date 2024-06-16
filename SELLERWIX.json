@@ -1,0 +1,1546 @@
+{
+	"info": {
+		"_postman_id": "e4ba6ef0-e83a-4a63-86b5-35d793ec7461",
+		"name": "SELLERWIX",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8629550"
+	},
+	"item": [
+		{
+			"name": "QUESTION 2",
+			"item": [
+				{
+					"name": "End2End - Flow 1",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"email\", \"eve.holt@reqres.in\")",
+											"pm.environment.set(\"password\", \"cityslicka\")"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let statusCode = pm.response.code",
+											"let email = pm.environment.get(\"email\")",
+											"let password = pm.environment.get(\"password\")",
+											"",
+											"if (statusCode === 200){",
+											"    pm.test(\"An access token is returned\", () => {",
+											"    pm.expect(pm.response.json()).to.have.property('token')",
+											"    pm.expect(pm.response.json().token).to.be.a('string')",
+											"    pm.collectionVariables.set('token', pm.response.json().token)",
+											"    })",
+											"} else {",
+											"",
+											"    pm.test(\"Status code is 400\", function () {",
+											"        pm.response.to.have.status(400);",
+											"    });",
+											"",
+											"    pm.test(\"Status code name: Bad Request\", function () {",
+											"        pm.response.to.have.status(\"Bad Request\");",
+											"    });",
+											"}",
+											"",
+											"",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "email",
+											"value": "{{email}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://reqres.in/api/login",
+									"protocol": "https",
+									"host": [
+										"reqres",
+										"in"
+									],
+									"path": [
+										"api",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"pm.test(\"Body matches string\", function () {",
+											"    pm.expect(pm.response.text()).to.include(\"leader\");",
+											"});",
+											"",
+											"pm.test(\"Check job is leader\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.job).to.eql(\"leader\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"name\", \"Name_\"+ parseInt(Math.random().toString(9).substring(2,7)));",
+											"pm.environment.set(\"job\", \"leader\")"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "{{name}}",
+											"type": "text"
+										},
+										{
+											"key": "job",
+											"value": "leader",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://reqres.in/api/users",
+									"protocol": "https",
+									"host": [
+										"reqres",
+										"in"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "id",
+											"value": "{{id}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://reqres.in/api/users",
+									"protocol": "https",
+									"host": [
+										"reqres",
+										"in"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get User",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"page\", \"1\")"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://reqres.in/api/users?page={{page}}",
+									"protocol": "https",
+									"host": [
+										"reqres",
+										"in"
+									],
+									"path": [
+										"api",
+										"users"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "{{page}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Step by step:\n\n1. Login successful\n    \n2. Create a user\n    \n3. Delete a user\n    \n4. Get users in a page"
+				},
+				{
+					"name": "End2End - Flow 2",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let statusCode = pm.response.code",
+											"let email = pm.environment.get(\"email\")",
+											"let password = pm.environment.get(\"password\")",
+											"",
+											"if (statusCode === 200){",
+											"    pm.test(\"An access token is returned\", () => {",
+											"    pm.expect(pm.response.json()).to.have.property('token')",
+											"    pm.expect(pm.response.json().token).to.be.a('string')",
+											"    pm.collectionVariables.set('token', pm.response.json().token)",
+											"    })",
+											"} else {",
+											"",
+											"    pm.test(\"Status code is 400\", function () {",
+											"        pm.response.to.have.status(400);",
+											"    });",
+											"",
+											"    pm.test(\"Status code name: Bad Request\", function () {",
+											"        pm.response.to.have.status(\"Bad Request\");",
+											"    });",
+											"}",
+											"",
+											"",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"email\", \"eve.holt@reqres.in\")",
+											"pm.environment.set(\"password\", \"cityslicka\")"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://reqres.in/api/login",
+									"protocol": "https",
+									"host": [
+										"reqres",
+										"in"
+									],
+									"path": [
+										"api",
+										"login"
+									]
+								},
+								"description": "This returns a `token` that you can use to retrieve information later on.\n\nWe have included a test to confirm if a token is returned. We have also added test scripts to copy the token to the `token` collection variable. This makes it easy for us to reuse this token in other requests in the collection."
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"name\", \"Name_\"+ parseInt(Math.random().toString(9).substring(2,7)));"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"pm.test(\"Body matches string\", function () {",
+											"    pm.expect(pm.response.text()).to.include(\"leader\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"{{name}}\",\n    \"job\": \"leader\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://reqres.in/api/users",
+									"protocol": "https",
+									"host": [
+										"reqres",
+										"in"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"morpheus\",\n    \"job\": \"zion resident\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://reqres.in/api/users/{{id}}",
+									"protocol": "https",
+									"host": [
+										"reqres",
+										"in"
+									],
+									"path": [
+										"api",
+										"users",
+										"{{id}}"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "{{id}}",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Single User",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "https://reqres.in/api/users/2",
+									"protocol": "https",
+									"host": [
+										"reqres",
+										"in"
+									],
+									"path": [
+										"api",
+										"users",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Step by step:\n\n1. Login successful\n    \n2. Create a user\n    \n3. Update a user\n    \n4. Get single user"
+				},
+				{
+					"name": "CREATE ENDPOINT",
+					"item": [
+						{
+							"name": "Create",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"name\", \"morpheus\")",
+											"pm.environment.set(\"job\", \"leader\")"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let statusCode = pm.response.code",
+											"let name = pm.environment.get(\"name\")",
+											"let job = pm.environment.get(\"job\")",
+											"",
+											"if (statusCode === 201){",
+											"    pm.test(\"Status code is 201\", function () {",
+											"        pm.response.to.have.status(201);",
+											"    });    ",
+											"",
+											"} else {",
+											"",
+											"    pm.test(\"Status code is 400\", function () {",
+											"        pm.response.to.have.status(400);",
+											"    });",
+											"}",
+											"",
+											"",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "{{name}}",
+											"type": "text"
+										},
+										{
+											"key": "job",
+											"value": "{{job}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://reqres.in/api/users",
+									"protocol": "https",
+									"host": [
+										"reqres",
+										"in"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"name\", \"morpheus\")",
+											"pm.environment.set(\"job\", \"leader\")"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let statusCode = pm.response.code",
+											"let name = pm.environment.get(\"name\")",
+											"let job = pm.environment.get(\"job\")",
+											"",
+											"if (statusCode === 201){",
+											"    pm.test(\"Status code is 201\", function () {",
+											"        pm.response.to.have.status(201);",
+											"    });    ",
+											"",
+											"} else {",
+											"",
+											"    pm.test(\"Status code is 400\", function () {",
+											"        pm.response.to.have.status(400);",
+											"    });",
+											"}",
+											"",
+											"",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "{{name}}",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "job",
+											"value": "{{job}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://reqres.in/api/users",
+									"protocol": "https",
+									"host": [
+										"reqres",
+										"in"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"name\", \"morpheus\")",
+											"pm.environment.set(\"job\", \"leader\")"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let statusCode = pm.response.code",
+											"let name = pm.environment.get(\"name\")",
+											"let job = pm.environment.get(\"job\")",
+											"",
+											"if (statusCode === 201){",
+											"    pm.test(\"Status code is 201\", function () {",
+											"        pm.response.to.have.status(201);",
+											"    });    ",
+											"",
+											"} else {",
+											"",
+											"    pm.test(\"Status code is 400\", function () {",
+											"        pm.response.to.have.status(400);",
+											"    });",
+											"}",
+											"",
+											"",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "{{name}}",
+											"type": "text"
+										},
+										{
+											"key": "job",
+											"value": "{{job}}",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "https://reqres.in/api/users",
+									"protocol": "https",
+									"host": [
+										"reqres",
+										"in"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Case 1: Create user with a valid name and job\n\nCase 2: Create user with a empty name and a valid job\n\nCase 3: Create user with a valid name and a empty job"
+				},
+				{
+					"name": "UPDATE ENDPOINT",
+					"item": [
+						{
+							"name": "Update",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"name\", \"morpheus\")",
+											"pm.environment.set(\"job\", \"zion resident\")"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let statusCode = pm.response.code",
+											"let name = pm.environment.get(\"name\")",
+											"let job = pm.environment.get(\"job\")",
+											"",
+											"if (statusCode === 200){",
+											"    pm.test(\"Status code is 200\", function () {",
+											"        pm.response.to.have.status(200);",
+											"    });    ",
+											"",
+											"} else {",
+											"",
+											"    pm.test(\"Status code is 400\", function () {",
+											"        pm.response.to.have.status(400);",
+											"    });",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "{{name}}",
+											"type": "text"
+										},
+										{
+											"key": "job",
+											"value": "{{job}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://reqres.in/api/users/2",
+									"protocol": "https",
+									"host": [
+										"reqres",
+										"in"
+									],
+									"path": [
+										"api",
+										"users",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"name\", \"morpheus\")",
+											"pm.environment.set(\"job\", \"zion resident\")"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let statusCode = pm.response.code",
+											"let name = pm.environment.get(\"name\")",
+											"let job = pm.environment.get(\"job\")",
+											"",
+											"if (statusCode === 200){",
+											"    pm.test(\"Status code is 200\", function () {",
+											"        pm.response.to.have.status(200);",
+											"    });    ",
+											"",
+											"} else {",
+											"",
+											"    pm.test(\"Status code is 400\", function () {",
+											"        pm.response.to.have.status(400);",
+											"    });",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "{{name}}",
+											"type": "text"
+										},
+										{
+											"key": "job",
+											"value": "{{job}}",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "https://reqres.in/api/users/2",
+									"protocol": "https",
+									"host": [
+										"reqres",
+										"in"
+									],
+									"path": [
+										"api",
+										"users",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"name\", \"morpheus\")",
+											"pm.environment.set(\"job\", \"zion resident\")"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let statusCode = pm.response.code",
+											"let name = pm.environment.get(\"name\")",
+											"let job = pm.environment.get(\"job\")",
+											"",
+											"if (statusCode === 200){",
+											"    pm.test(\"Status code is 200\", function () {",
+											"        pm.response.to.have.status(200);",
+											"    });    ",
+											"",
+											"} else {",
+											"",
+											"    pm.test(\"Status code is 400\", function () {",
+											"        pm.response.to.have.status(400);",
+											"    });",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "{{name}}",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "job",
+											"value": "{{job}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://reqres.in/api/users/2",
+									"protocol": "https",
+									"host": [
+										"reqres",
+										"in"
+									],
+									"path": [
+										"api",
+										"users",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Case 1: Update user with a valid name and job\n\nCase 2: Update user with a valid name and a empty job\n\nCase 3: Update user with a empty name and a valid job"
+				},
+				{
+					"name": "DELAYED RESPONSE ENDPOINT",
+					"item": [
+						{
+							"name": "Delayed Response",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response time is more than 300ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.above(300);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"delay\", \"3\");"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://reqres.in/api/users?delay={{delay}}",
+									"protocol": "https",
+									"host": [
+										"reqres",
+										"in"
+									],
+									"path": [
+										"api",
+										"users"
+									],
+									"query": [
+										{
+											"key": "delay",
+											"value": "{{delay}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delayed Response",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response time is more than 200ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.above(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"delay\", \"0\");"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "https://reqres.in/api/users?delay={{delay}}",
+									"protocol": "https",
+									"host": [
+										"reqres",
+										"in"
+									],
+									"path": [
+										"api",
+										"users"
+									],
+									"query": [
+										{
+											"key": "delay",
+											"value": "{{delay}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delayed Response",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response time is more than 500ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.above(500);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"delay\", \"5\");"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://reqres.in/api/users?delay={{delay}}",
+									"protocol": "https",
+									"host": [
+										"reqres",
+										"in"
+									],
+									"path": [
+										"api",
+										"users"
+									],
+									"query": [
+										{
+											"key": "delay",
+											"value": "{{delay}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Case 1: The response time is above 3 seconds\n\nCase 2: The response time is above 0 seconds\n\nCase 3: The response time is above 5 seconds"
+				},
+				{
+					"name": "REGISTER - SUCCESSFUL ENDPOINT",
+					"item": [
+						{
+							"name": "Register - Successful",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"email\", \"eve.holt@reqres.in\")",
+											"pm.environment.set(\"password\", \"pistol\")"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let statusCode = pm.response.code",
+											"let email = pm.environment.get(\"email\")",
+											"let password = pm.environment.get(\"password\")",
+											"",
+											"if (statusCode === 200){",
+											"    pm.test(\"An user is registered successfully\", () => {",
+											"    pm.expect(pm.response.json()).to.have.property('token')",
+											"    pm.expect(pm.response.json().token).to.be.a('string')",
+											"    pm.collectionVariables.set('token', pm.response.json().token)",
+											"    })",
+											"} else {",
+											"",
+											"    pm.test(\"Status code is 400\", function () {",
+											"        pm.response.to.have.status(400);",
+											"    });",
+											"",
+											"    pm.test(\"Status code name: Bad Request\", function () {",
+											"        pm.response.to.have.status(\"Bad Request\");",
+											"    });",
+											"}",
+											"",
+											"",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "email",
+											"value": "{{email}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://reqres.in/api/register",
+									"protocol": "https",
+									"host": [
+										"reqres",
+										"in"
+									],
+									"path": [
+										"api",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register - Successful",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"email\", \"eve.holt@reqres.in\")",
+											"pm.environment.set(\"password\", \"pistol\")"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let statusCode = pm.response.code",
+											"let email = pm.environment.get(\"email\")",
+											"let password = pm.environment.get(\"password\")",
+											"",
+											"if (statusCode === 200){",
+											"    pm.test(\"An user is registered successfully\", () => {",
+											"    pm.expect(pm.response.json()).to.have.property('token')",
+											"    pm.expect(pm.response.json().token).to.be.a('string')",
+											"    pm.collectionVariables.set('token', pm.response.json().token)",
+											"    })",
+											"} else {",
+											"",
+											"    pm.test(\"Status code is 400\", function () {",
+											"        pm.response.to.have.status(400);",
+											"    });",
+											"",
+											"    pm.test(\"Status code name: Bad Request\", function () {",
+											"        pm.response.to.have.status(\"Bad Request\");",
+											"    });",
+											"}",
+											"",
+											"",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "email",
+											"value": "{{email}}",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://reqres.in/api/register",
+									"protocol": "https",
+									"host": [
+										"reqres",
+										"in"
+									],
+									"path": [
+										"api",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register - Successful",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"email\", \"eve.holt@reqres.in\")",
+											"pm.environment.set(\"password\", \"pistol\")"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let statusCode = pm.response.code",
+											"let email = pm.environment.get(\"email\")",
+											"let password = pm.environment.get(\"password\")",
+											"",
+											"if (statusCode === 200){",
+											"    pm.test(\"An user is registered successfully\", () => {",
+											"    pm.expect(pm.response.json()).to.have.property('token')",
+											"    pm.expect(pm.response.json().token).to.be.a('string')",
+											"    pm.collectionVariables.set('token', pm.response.json().token)",
+											"    })",
+											"} else {",
+											"",
+											"    pm.test(\"Status code is 400\", function () {",
+											"        pm.response.to.have.status(400);",
+											"    });",
+											"",
+											"    pm.test(\"Status code name: Bad Request\", function () {",
+											"        pm.response.to.have.status(\"Bad Request\");",
+											"    });",
+											"}",
+											"",
+											"",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "email",
+											"value": "{{email}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "https://reqres.in/api/register",
+									"protocol": "https",
+									"host": [
+										"reqres",
+										"in"
+									],
+									"path": [
+										"api",
+										"register"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Case 1: Register user with a valid email and password\n\nCase 2: Register user with a empty email and a valid password\n\nCase 3: Register user with a valid email and a empty password"
+				}
+			]
+		},
+		{
+			"name": "QUESTION 3",
+			"item": [
+				{
+					"name": "LOGIN - SUCCESSFUL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"An access token is returned\", () => {",
+									"    pm.expect(pm.response.json()).to.have.property('token')",
+									"    pm.expect(pm.response.json().token).to.be.a('string')",
+									"    pm.collectionVariables.set('token', pm.response.json().token)",
+									"})",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"eve.holt@reqres.in\",\n    \"password\": \"cityslicka\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://reqres.in/api/login",
+							"protocol": "https",
+							"host": [
+								"reqres",
+								"in"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LOGIN - UNSUCCESSFUL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code name is Bad Request\", function () {",
+									"    pm.response.to.have.status(\"Bad Request\");",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"peter@klaven\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://reqres.in/api/login",
+							"protocol": "https",
+							"host": [
+								"reqres",
+								"in"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "1. There are successful (OK) and unsuccessful (BadRequest) versions of this endpoint.\n    \n2. Please organize for the login test to be run against both the successful and unsuccessful endpoints.\n    \n3. We expect to see one pass and one fail."
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}
